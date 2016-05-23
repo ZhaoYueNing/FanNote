@@ -20,6 +20,7 @@ public class NoteContainer  {
      */
     public static void add(Note note){
         noteList.add(note);
+
     }
 
     /**
@@ -47,4 +48,7 @@ public class NoteContainer  {
         return noteList.size();
     }
 
+    public static List<Note> getList() {
+        return noteList;
+    }
 }

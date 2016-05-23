@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pools;
 import android.text.TextUtils;
@@ -46,7 +47,7 @@ public class AddNoteFragment extends Fragment {
                 save();
             }
         });
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return view;
     }
 
     /**
@@ -64,5 +65,10 @@ public class AddNoteFragment extends Fragment {
         note.setContent(content);
         note.setDate(Calendar.getInstance());
         NoteContainer.add(note);
+        Message msg = new Message();
+        msg.what = MainActivity.UPDATE_DATA;
+        //发送一则消息 使MainActivity 更新listview
+        handle.sendMessage(msg);
+        onDestroy();
     }
 }
