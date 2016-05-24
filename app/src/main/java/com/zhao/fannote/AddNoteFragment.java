@@ -7,13 +7,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pools;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zhao.fannote.domain.Note;
@@ -37,7 +35,7 @@ public class AddNoteFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frmage_main, null);
+        View view = inflater.inflate(R.layout.frmage_additem, null);
         et_title = (EditText) view.findViewById(R.id.et_title);
         et_content = (EditText) view.findViewById(R.id.et_content);
 

@@ -7,14 +7,19 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.zhao.fannote.domain.Note;
 import com.zhao.fannote.model.NoteContainer;
 import com.zhao.fannote.util.NoteAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
     public final static int UPDATE_DATA = 1;
     private ListView lv_note;
+    private FragmentManager manager;
+    private NoteAdapter adapter;
+
 
     private Handler handler = new Handler(Looper.getMainLooper()){
         @Override
@@ -25,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-    private NoteAdapter adapter;
 
     /**
      * 升级数据
@@ -36,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         lv_note.setAdapter(adapter);
     }
 
-    private FragmentManager manager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 toAddNote();
             }
         });
+        lv_note.setOnItemClickListener(this);
     }
 
     /**
@@ -63,6 +68,18 @@ public class MainActivity extends AppCompatActivity {
     private void toAddNote(){
         manager.beginTransaction()
                 .add(R.id.frame_main,new AddNoteFragment(MainActivity.this))
+                .addToBackStack(null)
+                .commit();
+    }
+
+    /**
+     * 点击listview上的条目跳转到对应的内容显示
+     */
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Note note = NoteContainer.getList().get(position);
+        manager.beginTransaction()
+                .add(R.id.frame_main,new DisplayContentFragment(MainActivity.this,note))
                 .addToBackStack(null)
                 .commit();
     }
