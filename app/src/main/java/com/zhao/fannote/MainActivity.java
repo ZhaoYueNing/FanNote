@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private void toAddNote(){
         manager.beginTransaction()
-                .add(R.id.frame_main,new AddNoteFragment(MainActivity.this))
+                .add(R.id.frame_main,new AddNoteFragment())
                 .addToBackStack(null)
                 .commit();
     }

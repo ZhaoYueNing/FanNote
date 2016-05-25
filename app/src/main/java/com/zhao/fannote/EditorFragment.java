@@ -1,34 +1,26 @@
 package com.zhao.fannote;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.zhao.fannote.domain.Note;
 import com.zhao.fannote.model.NoteContainer;
 
-import java.util.Calendar;
-
 /**
  * Created by Zhao on 2016/5/24.
- * 添加Note页面
  */
-public class AddNoteFragment extends Fragment {
+public class EditorFragment extends Fragment {
+    private Note note;
     private EditText et_title;
     private EditText et_content;
-    private Context context;
-    public AddNoteFragment() {
-        this.context = getActivity();
+
+    public EditorFragment(Note note) {
+        this.note = note;
     }
 
     @Nullable
@@ -41,27 +33,22 @@ public class AddNoteFragment extends Fragment {
         view.findViewById(R.id.bt_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                save();
+                editor();
             }
         });
         return view;
     }
 
     /**
-     * 将数据保存到NoteContainer类中的容器
+     * 编辑更改note
      */
-    private void save() {
+    private void editor() {
         String title = et_title.getText().toString();
         String content = et_content.getText().toString();
-        if (TextUtils.isEmpty(title)){
-            Toast.makeText(this.context, "标题不得为空", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Note note = new Note();
+
         note.setTitle(title);
         note.setContent(content);
-        note.setDate(Calendar.getInstance());
-        NoteContainer.add(note);
-        onDestroy();
+
+        NoteContainer.changNote(note);
     }
 }

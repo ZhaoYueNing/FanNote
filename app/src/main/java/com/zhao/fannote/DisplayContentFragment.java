@@ -1,6 +1,7 @@
 package com.zhao.fannote;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,5 +49,15 @@ public class DisplayContentFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * 编辑
+     * 跳转到EditorFragment
+     */
+    private void editor() {
+        FragmentManager manager = getFragmentManager();
+        manager.beginTransaction()
+                .add(R.id.frame_main,new Fragment())
+                .addToBackStack(null)
+                .commit();
+    }
 }
