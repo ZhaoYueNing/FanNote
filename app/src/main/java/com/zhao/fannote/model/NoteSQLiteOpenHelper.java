@@ -8,19 +8,24 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by Zhao on 2016/5/25.
  */
 public class NoteSQLiteOpenHelper extends SQLiteOpenHelper {
-    private final String CREATE_TABLE_NOTES = "CREATE TABLE notes(" +
+    public static final String TABLE_NAME = "notes";
+    private final String CREATE_TABLE_NOTES = "CREATE TABLE "+TABLE_NAME+"(" +
             "_id INTEGER PRIMARY KEY," +
             "title TEXT," +
-            "content TEXT)";
-    public NoteSQLiteOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+            "content TEXT," +
+            "date INTEGER)";
+    public static final String SQL_NAME = "notesData.db";
+
+    public NoteSQLiteOpenHelper(Context context, SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, SQL_NAME, factory, version);
 
     }
 
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        //创建表
+        db.execSQL(CREATE_TABLE_NOTES);
     }
 
     @Override

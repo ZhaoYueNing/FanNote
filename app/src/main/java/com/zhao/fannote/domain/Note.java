@@ -1,6 +1,7 @@
 package com.zhao.fannote.domain;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Zhao on 2016/5/23.
@@ -14,7 +15,7 @@ public class Note {
     //内容
     private String content;
     //添加日期
-    private Calendar date;
+    private Date date;
 
     public Note() {
         //将hashcode设置为对象的id
@@ -38,11 +39,11 @@ public class Note {
         this.content = content;
     }
 
-    public Calendar getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(Calendar date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

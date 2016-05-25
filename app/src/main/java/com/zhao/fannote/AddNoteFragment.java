@@ -18,6 +18,7 @@ import com.zhao.fannote.domain.Note;
 import com.zhao.fannote.model.NoteContainer;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Zhao on 2016/5/24.
@@ -60,8 +61,8 @@ public class AddNoteFragment extends Fragment {
         Note note = new Note();
         note.setTitle(title);
         note.setContent(content);
-        note.setDate(Calendar.getInstance());
+        note.setDate(new Date());
         NoteContainer.add(note);
-        onDestroy();
+        getFragmentManager().popBackStack();
     }
 }

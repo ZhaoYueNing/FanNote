@@ -1,12 +1,19 @@
 package com.zhao.fannote.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import com.zhao.fannote.MainActivity;
 import com.zhao.fannote.domain.Note;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +27,35 @@ import java.util.List;
 public class NoteContainer  {
     private static List<Note> noteList = new LinkedList<>();
     private static Handler handle = new Handler(Looper.getMainLooper());
+    private static SQLiteDatabase db;
 
+    /**
+     * 对数据初始化操作
+     */
+    public static void init() {
+        SQLiteOpenHelper openHelper = MainActivity.getOpenHelper();
+        db = openHelper.getReadableDatabase();
+        Cursor cursor = db.query(NoteSQLiteOpenHelper.TABLE_NAME,new String[]{"_id","title","content","date"},null,null,null,null,null);
+        //将数据库数据导入到noteList
+        if (cursor.moveToFirst()){
+            do{
+                Note note = new Note();
+                int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                String title = cursor.getString(cursor.getColumnIndex("title"));
+                String content = cursor.getString(cursor.getColumnIndex("content"));
+                long time = cursor.getLong(cursor.getColumnIndex("date"));
+                Date date = new Date();
+                date.setTime(time);
+                note.setId(id);
+                note.setTitle(title);
+                note.setContent(content);
+                note.setDate(date);
+                noteList.add(note);
+            }while (cursor.moveToNext());
+        }
+        //将noteList的数据显示在listview上
+        updateData();
+    }
 
     /**
      * 添加note
@@ -28,6 +63,13 @@ public class NoteContainer  {
      */
     public static void add(Note note){
         noteList.add(note);
+        //插入到数据库
+        ContentValues cv = new ContentValues();
+        cv.put("_id",note.getId());
+        cv.put("title",note.getTitle());
+        cv.put("content",note.getContent());
+        cv.put("date",note.getDate().getTime());
+        db.insert(NoteSQLiteOpenHelper.TABLE_NAME,null,cv);
         //添加完成后更新UI数据
         updateData();
     }
@@ -43,6 +85,8 @@ public class NoteContainer  {
             Note note = iterator.next();
             if (note.getId()==id){
                 noteList.remove(note);
+                //在数据库删除
+                db.delete(NoteSQLiteOpenHelper.TABLE_NAME,"id=?",new String[]{note.getId()+""});
                 updateData();
                 return true;
             }
@@ -59,6 +103,8 @@ public class NoteContainer  {
     }
 
     public static List<Note> getList() {
+        if (noteList==null)
+            noteList = new LinkedList<>();
         return noteList;
     }
 
@@ -67,7 +113,13 @@ public class NoteContainer  {
      * @param note
      */
     public static void changNote(Note note) {
+        //在数据库更新
+        ContentValues cv = new ContentValues();
+        cv.put("title",note.getTitle());
+        cv.put("content",note.getContent());
+        db.update(NoteSQLiteOpenHelper.TABLE_NAME,cv,"_id=?",new String[]{note.getId()+""});
 
+        updateData();
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.zhao.fannote;
 
 import android.app.FragmentManager;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -12,13 +13,17 @@ import android.widget.ListView;
 
 import com.zhao.fannote.domain.Note;
 import com.zhao.fannote.model.NoteContainer;
+import com.zhao.fannote.model.NoteSQLiteOpenHelper;
 import com.zhao.fannote.util.NoteAdapter;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+    private static int flag = 0;
     public final static int UPDATE_DATA = 1;
+    private final static int SQL_VERSION = 3;
     private ListView lv_note;
     private FragmentManager manager;
     private NoteAdapter adapter;
+    private static SQLiteOpenHelper openHelper;
 
 
     private Handler handler = new Handler(Looper.getMainLooper()){
@@ -59,6 +64,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
         lv_note.setOnItemClickListener(this);
+        openHelper = new NoteSQLiteOpenHelper(MainActivity.this,null,SQL_VERSION);
+        if (flag==0) {
+            NoteContainer.init();
+            flag++;
+        }
     }
 
     /**
@@ -82,5 +92,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 .add(R.id.frame_main,new DisplayContentFragment(MainActivity.this,note))
                 .addToBackStack(null)
                 .commit();
+    }
+
+    public static SQLiteOpenHelper getOpenHelper() {
+        return openHelper;
     }
 }
